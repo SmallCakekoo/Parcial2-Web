@@ -18,33 +18,53 @@ export interface Filters {
   available: string;
 }
 
-export interface RoomsContextType {}
+export interface RoomsContextType {
+  roomsList: Room[];
+  roomsReserved: Room[];
+  filters: Filters;
+  setRoomsList: any;
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+  handleRoomsReserved: (room: Room) => void;
+  updateRoomAvailable: (id: number, available: boolean) => void;
+}
 
 export const RoomsContext = createContext<RoomsContextType | null>(null);
 
-export function AppContextProvider({ children }: PropsWithChildren) {
+export function RoomsProvider({ children }: PropsWithChildren) {
   const [roomsList, setRoomsList] = useState<Room[]>(() =>
-    (initialRooms as Room[]).map((room) => ({ ...room, isReserved: false })),
+    (initialRooms as Room[]).map((ro) => ({ ...ro, isReserved: false })),
   );
   // estado derivado
-  const roomsReserved: Room[] = roomsList.filter((room) => room.isReserved);
+  const roomsReserved: Room[] = roomsList.filter((ro) => ro.isReserved);
 
-const [filters, setFilters] = useState<Filters>(
-    
-)
+  const [filters, setFilters] = useState<Filters>({ type: "", available: "" });
 
   // Funciones
-  const handleRoomsReserved = (room: Room[]): void => {
+  const updateRoomAvailable = (id: number, available: boolean): void => {
     setRoomsList((prev) =>
-      prev.map((room) =>
-        room.id === room.id ? { ...room, isReserved: !room.isReserved } : room,
+      prev.map((ro) => (ro.id === id ? { ...ro, available } : ro)),
+    );
+  };
+
+  const handleRoomsReserved = (room: Room): void => {
+    setRoomsList((prev) =>
+      prev.map((ro) =>
+        ro.id === room.id ? { ...ro, isReserved: !ro.isReserved } : ro,
       ),
     );
   };
 
   return (
     <RoomsContext.Provider
-      value={{ roomsList, setRoomsList, handleRoomsReserved }}
+      value={{
+        roomsList,
+        roomsReserved,
+        setRoomsList,
+        filters,
+        setFilters,
+        handleRoomsReserved,
+        updateRoomAvailable,
+      }}
     >
       {children}
     </RoomsContext.Provider>
