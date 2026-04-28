@@ -2,7 +2,7 @@ export const StatBox = ({ label, value }: { label: string; value: number }) => {
   return (
     <div>
       <p>
-        Hay {value}: {label} Salas
+        Hay {label} : {value} Salas
       </p>
     </div>
   );
