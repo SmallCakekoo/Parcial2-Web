@@ -1,14 +1,30 @@
-import React
-
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { RoomsContext } from "../context/RoomsContext";
 import type { RoomsContextType } from "../context/RoomsContext";
-import type { Room } from "../context/RoomsContext";
-import { FiltersBar } from "../components/FiltersBar"
 
 export const FiltersBar = () => {
+  const context = useContext(RoomsContext);
+  const { filters, setFilters } = context as RoomsContextType;
 
-    return(
-        <p>unu</p>
-    )
-}
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
+
+  const clearFilter = (): void =>
+    setFilters({
+      type: "",
+      available: "",
+    });
+
+  return (
+    <div>
+        <select>
+            <option value=""></option>
+        </select>
+      <button type="button" onClick={clearFilter}>
+        Clear filters
+      </button>
+    </div>
+  );
+};
